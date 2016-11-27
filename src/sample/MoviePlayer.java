@@ -7,14 +7,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -35,17 +32,8 @@ public class MoviePlayer extends Application {
         MediaView view = new MediaView(player);
         //System.out.println("media.wigth: " +media.getWidh());
         final VBox vbox = new VBox();
-        final Slider slider = new Slider();
+        Slider slider = new Slider();
         vbox.getChildren().add(slider);
-        final int bands = player.getAudioSpectrumNumBands();
-        final HBox hbox = new HBox(2);
-        final Rectangle[] rects= new Rectangle[bands];
-        for (int i=0; i<rects.length; i++){
-            rects[i] = new Rectangle();
-            rects[i].setFill(Color.GREENYELLOW);
-            hbox.getChildren().add(rects[i]);
-        }
-        vbox.getChildren().add(hbox);
 
         root.getChildren().add(view);
         root.getChildren().add(vbox);
@@ -61,13 +49,6 @@ public class MoviePlayer extends Application {
             public void run() {
                 int w = player.getMedia().getWidth();
                 int h = player.getMedia().getHeight();
-
-                hbox.setMinWidth(w);
-                int bandWidth=w/rects.length;
-                for(Rectangle r:rects){
-                    r.setWidth(bandWidth);
-                    r.setHeight(2);
-                }
                 primaryStage.setMinWidth(w);
                 primaryStage.setMinHeight(h);
 
@@ -91,17 +72,7 @@ public class MoviePlayer extends Application {
                 player.seek(Duration.seconds(slider.getValue()));
             }
         });
-        player.setAudioSpectrumListener(new AudioSpectrumListener() {
-            @Override
-            public void spectrumDataUpdate(double v, double v1, float[] mags, float[] floats1) {
-                for (int i=0; i<rects.length; i++){
-                    double h = mags[i]+60;
-                    if (h>2) {
-                        rects[i].setHeight(h);
-                    }
-                }
-            }
-        });
+        // controller
     }
 }
 
